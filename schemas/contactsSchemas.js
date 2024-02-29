@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-export const createContactSchema = Joi.object({
+const createContactSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -12,7 +12,7 @@ export const createContactSchema = Joi.object({
     .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
 });
 
-export const updateContactSchema = Joi.object({
+const updateContactSchema = Joi.object({
   name: Joi.string().min(3).max(30),
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
@@ -21,3 +21,7 @@ export const updateContactSchema = Joi.object({
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
 });
+export default {
+  createContactSchema,
+  updateContactSchema,
+};
