@@ -1,10 +1,14 @@
 import HttpError from "../helpers/HttpError.js";
-import { createContactSchema } from "../schemas/contactsSchemas.js";
+import {
+  createContactSchema,
+  updateContactSchema,
+} from "../schemas/contactsSchemas.js";
 import {
   listContacts,
   getContactById,
   addContact,
   removeContact,
+  updateContactById,
 } from "../services/contactsServices.js";
 
 export const getAllContacts = async (req, res, next) => {
@@ -31,6 +35,12 @@ export const getOneContact = async (req, res, next) => {
 
 export const deleteContact = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const result = await removeContact(id);
+    if (!result) {
+      throw HttpError(404);
+    }
+    res.json({ message: "Delete succes" });
   } catch (error) {
     next(error);
   }
@@ -38,6 +48,10 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
+    const { error } = createContactSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
     const result = await addContact(req.body);
     res.status(201).json(result);
   } catch (error) {
@@ -45,4 +59,19 @@ export const createContact = async (req, res, next) => {
   }
 };
 
-export const updateContact = (req, res) => {};
+export const updateContact = async (req, res, next) => {
+  try {
+    const { error } = updateContactSchema.validate(req.body);
+    if (error) {
+      throw HttpError(400, error.message);
+    }
+    const { id } = req.params;
+    const result = await updateContactById(id, req.body);
+    if (!result) {
+      throw HttpError(404, error.message);
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
