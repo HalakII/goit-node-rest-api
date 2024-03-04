@@ -20,7 +20,10 @@ const updateContactSchema = Joi.object({
   phone: Joi.string()
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
-});
+})
+  .min(1)
+  .message("Body must have at least one field");
+
 export default {
   createContactSchema,
   updateContactSchema,
