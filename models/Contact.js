@@ -22,8 +22,9 @@ const contactSchema = new Schema(
 );
 
 contactSchema.post("save", hooks.handleSaveError);
+contactSchema.pre("findOneAndUpdate", hooks.setUpdateSettings);
+contactSchema.post("findOneAndUpdate", hooks.handleSaveError);
+
 const Contact = model("contact", contactSchema);
 
 export default Contact;
-
-// 65ea1c431017cdc7aa88344d

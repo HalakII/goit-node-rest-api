@@ -37,5 +37,3 @@ mongoose
     console.log(error.message);
     process.exit(1);
   });
-
-//CjDtWs0Py0K08uLR
