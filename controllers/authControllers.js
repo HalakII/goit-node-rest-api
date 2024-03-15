@@ -10,6 +10,7 @@ import jwt from "jsonwebtoken";
 
 dotenv.config();
 const { JWT_SECRET } = process.env;
+// console.log(JWT_SECRET);
 
 const register = async (req, res) => {
   const { email } = req.body;
