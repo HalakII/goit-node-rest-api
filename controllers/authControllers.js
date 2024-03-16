@@ -4,13 +4,11 @@ import {
   registerUser,
   findUser,
   validatePassword,
+  updateUser,
 } from "../services/authSevices.js";
-import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
-dotenv.config();
 const { JWT_SECRET } = process.env;
-// console.log(JWT_SECRET);
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -37,14 +35,33 @@ const login = async (req, res) => {
   if (!comparePassword) {
     throw HttpError(401, "Email or password is wrong");
   }
-  const payload = { id: user._id };
+  const { _id: id } = user;
+  const payload = { id };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
-  res.json({ token, user });
+  await updateUser({ _id: id }, { token });
+  res.json({ token });
+
   //   const decodeToken = jwt.decode(token);
   // try{ const {id}}catch{}
+};
+
+const getCurrent = async (req, res) => {
+  const { email } = req.user;
+  res.json({
+    email,
+  });
+};
+
+const logOut = async (req, res) => {
+  const { _id } = req.user;
+  await updateUser({ _id }, { token: "" });
+
+  res.status(204).send();
 };
 
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
+  logOut: ctrlWrapper(logOut),
 };

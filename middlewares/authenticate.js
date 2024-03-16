@@ -1,10 +1,8 @@
 import jwt from "jsonwebtoken";
 import HttpError from "../helpers/HttpError.js";
 import { findUser } from "../services/authSevices.js";
-// import "dotenv/config";
 
 const { JWT_SECRET } = process.env;
-console.log(JWT_SECRET);
 
 const authenticate = async (req, _, next) => {
   const { authorization } = req.headers;
@@ -25,10 +23,10 @@ const authenticate = async (req, _, next) => {
     if (!user) {
       return next(HttpError(401, "User not found"));
     }
-    // if (!user.token) {
-    //   return next(HttpError(401, "User already signout"));
-    // }
-    // req.user = user;
+    if (!user.token) {
+      return next(HttpError(401, "User already signout"));
+    }
+    req.user = user;
     next();
   } catch (error) {
     next(HttpError(401, error.message));

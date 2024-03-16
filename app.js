@@ -2,13 +2,12 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
-import dotenv from "dotenv";
+import "dotenv/config";
 
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 
 const app = express();
-dotenv.config();
 
 const { DB_HOST, PORT = 3000 } = process.env;
 

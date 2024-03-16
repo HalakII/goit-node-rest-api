@@ -1,10 +1,17 @@
 import Contact from "../models/Contact.js";
 
-const listContacts = () => Contact.find();
+const listContacts = (filter = {}, query = {}) =>
+  Contact.find(filter, "", query);
+
 const getContactById = (id) => Contact.findById(id);
 const addContact = (data) => Contact.create(data);
 const updateContactById = (id, data) => Contact.findByIdAndUpdate(id, data);
 const removeContact = (id) => Contact.findByIdAndDelete(id);
+
+const getOneContactById = (filter) => Contact.findOne(filter);
+const updateOneContactById = (filter, data) =>
+  Contact.findOneAndUpdate(filter, data);
+const removeOneContact = (filter) => Contact.findOneAndDelete(filter);
 
 export default {
   listContacts,
@@ -12,4 +19,10 @@ export default {
   getContactById,
   updateContactById,
   removeContact,
+  getOneContactById,
+  updateOneContactById,
+  removeOneContact,
 };
+
+// const listContacts = (filter = {}, skip, limit) =>
+//   Contact.find(filter).skip(skip).limit(limit);

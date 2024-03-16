@@ -5,6 +5,7 @@ import {
   userRegisterSchema,
   userLoginSchema,
 } from "../schemas/usersSchemas.js";
+import authenticate from "../middlewares/authenticate.js";
 
 const authRouter = express.Router();
 
@@ -14,4 +15,11 @@ authRouter.post(
   authControllers.register
 );
 authRouter.post("/login", validateBody(userLoginSchema), authControllers.login);
+
+authRouter.get("/current", authenticate, authControllers.getCurrent);
+
+authRouter.post("/logout", authenticate, authControllers.logOut);
+
+// authRouter.patch("/", authenticate, authControllers.changeSubscription);
+
 export default authRouter;
