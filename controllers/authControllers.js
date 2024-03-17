@@ -60,12 +60,10 @@ const logOut = async (req, res) => {
 const changeSubscription = async (req, res) => {
   const { _id } = req.user;
   const { subscription } = req.body;
-  console.log(req.body);
-  if (!["starter", "pro", "business"].includes(subscription)) {
+  const updatedUser = await updateUser(_id, { subscription });
+  if (!updatedUser) {
     return res.status(400).json({ error: "Invalid subscription value" });
   }
-  await updateUser(_id, { subscription });
-
   res.json({ message: "Successfully Updated" });
 };
 

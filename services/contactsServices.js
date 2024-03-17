@@ -23,6 +23,3 @@ export default {
   updateOneContactById,
   removeOneContact,
 };
-
-// const listContacts = (filter = {}, skip, limit) =>
-//   Contact.find(filter).skip(skip).limit(limit);
