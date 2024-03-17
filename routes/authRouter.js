@@ -20,6 +20,6 @@ authRouter.get("/current", authenticate, authControllers.getCurrent);
 
 authRouter.post("/logout", authenticate, authControllers.logOut);
 
-// authRouter.patch("/", authenticate, authControllers.changeSubscription);
+authRouter.patch("/", authenticate, authControllers.changeSubscription);
 
 export default authRouter;

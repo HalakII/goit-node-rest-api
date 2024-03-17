@@ -40,15 +40,13 @@ const login = async (req, res) => {
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
   await updateUser({ _id: id }, { token });
   res.json({ token });
-
-  //   const decodeToken = jwt.decode(token);
-  // try{ const {id}}catch{}
 };
 
 const getCurrent = async (req, res) => {
-  const { email } = req.user;
+  const { email, subscription } = req.user;
   res.json({
     email,
+    subscription,
   });
 };
 
@@ -59,9 +57,22 @@ const logOut = async (req, res) => {
   res.status(204).send();
 };
 
+const changeSubscription = async (req, res) => {
+  const { _id } = req.user;
+  const { subscription } = req.body;
+  console.log(req.body);
+  if (!["starter", "pro", "business"].includes(subscription)) {
+    return res.status(400).json({ error: "Invalid subscription value" });
+  }
+  await updateUser(_id, { subscription });
+
+  res.json({ message: "Successfully Updated" });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logOut: ctrlWrapper(logOut),
+  changeSubscription: ctrlWrapper(changeSubscription),
 };
