@@ -62,7 +62,7 @@ const changeSubscription = async (req, res) => {
   const { subscription } = req.body;
   const updatedUser = await updateUser(_id, { subscription });
   if (!updatedUser) {
-    return res.status(400).json({ error: "Invalid subscription value" });
+    throw HttpError(400, "Invalid subscription value");
   }
   res.json({ message: "Successfully Updated" });
 };
