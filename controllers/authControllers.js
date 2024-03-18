@@ -54,17 +54,14 @@ const logOut = async (req, res) => {
   const { _id } = req.user;
   await updateUser({ _id }, { token: "" });
 
-  res.status(204).send();
+  res.status(204).json();
 };
 
 const changeSubscription = async (req, res) => {
   const { _id } = req.user;
   const { subscription } = req.body;
   const updatedUser = await updateUser(_id, { subscription });
-  if (!updatedUser) {
-    throw HttpError(400, "Invalid subscription value");
-  }
-  res.json({ message: "Successfully Updated" });
+  res.json(updatedUser);
 };
 
 export default {
