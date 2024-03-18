@@ -15,8 +15,5 @@ export const userLoginSchema = Joi.object({
 });
 
 export const subscriptionSchema = Joi.object({
-  subscription: Joi.string()
-    .valid("starter", "pro", "business")
-    .required()
-    .messages({ "string.pattern.base": `"Invalid subscription value"` }),
+  subscription: Joi.string().valid("starter", "pro", "business").required(),
 });
