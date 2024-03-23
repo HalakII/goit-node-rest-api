@@ -64,6 +64,7 @@ const changeSubscription = async (req, res) => {
   res.json(updatedUser);
 };
 
+const changeAvatar = async (req, res) => {};
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
