@@ -28,11 +28,11 @@ authRouter.patch(
   validateBody(subscriptionSchema),
   authControllers.changeSubscription
 );
-// authRouter.patch(
-//   "/avatars",
-//   upload.single("avatarURL"),
-//   authenticate,
-//   authControllers.changeAvatar
-// );
+authRouter.patch(
+  "/avatars",
+  upload.single("avatarURL"),
+  authenticate,
+  authControllers.changeAvatar
+);
 
 export default authRouter;
