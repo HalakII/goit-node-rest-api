@@ -76,6 +76,9 @@ const changeSubscription = async (req, res) => {
 
 const changeAvatar = async (req, res) => {
   const { _id: id } = req.user;
+  if (!req.file) {
+    throw HttpError(400, "Avatar not found");
+  }
 
   const { path: oldPathAvatar, filename } = req.file;
   const newPathAvatar = path.join(path.resolve("public", "avatars"), filename);
