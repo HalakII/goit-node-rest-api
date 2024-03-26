@@ -13,6 +13,7 @@ import fs from "fs/promises";
 import path from "path";
 
 const { JWT_SECRET } = process.env;
+const avatarPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -76,20 +77,17 @@ const changeSubscription = async (req, res) => {
 
 const changeAvatar = async (req, res) => {
   const { _id: id } = req.user;
+
   if (!req.file) {
     throw HttpError(400, "Avatar not found");
   }
 
   const { path: oldPathAvatar, filename } = req.file;
-  const newPathAvatar = path.join(path.resolve("public", "avatars"), filename);
+  const newPathAvatar = path.join(avatarPath, filename);
 
-  Jimp.read(oldPathAvatar)
-    .then((image) => {
-      return image.cover(250, 250).write(newPathAvatar);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  const image = await Jimp.read(oldPathAvatar);
+  await image.cover(250, 250).writeAsync(newPathAvatar);
+
   await fs.rename(oldPathAvatar, newPathAvatar);
 
   const avatarURL = path.join("avatars", filename);
