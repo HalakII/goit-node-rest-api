@@ -86,7 +86,7 @@ const changeAvatar = async (req, res) => {
   const newPathAvatar = path.join(avatarPath, filename);
 
   const image = await Jimp.read(oldPathAvatar);
-  await image.cover(250, 250).writeAsync(newPathAvatar);
+  await image.cover(250, 250).writeAsync(oldPathAvatar);
 
   await fs.rename(oldPathAvatar, newPathAvatar);
 
