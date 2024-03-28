@@ -7,8 +7,13 @@ import {
   updateUser,
 } from "../services/authSevices.js";
 import jwt from "jsonwebtoken";
+import gravatar from "gravatar";
+import Jimp from "jimp";
+import fs from "fs/promises";
+import path from "path";
 
 const { JWT_SECRET } = process.env;
+const avatarPath = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -16,11 +21,14 @@ const register = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email is already in use");
   }
-  const newUser = await registerUser(req.body);
+  const avatarURL = gravatar.url(email);
+  const newUser = await registerUser({ ...req.body, avatarURL });
+
   res.status(201).json({
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarUrl: newUser.avatarURL,
     },
   });
 };
@@ -58,16 +66,42 @@ const logOut = async (req, res) => {
 };
 
 const changeSubscription = async (req, res) => {
-  const { _id } = req.user;
+  const { _id: id } = req.user;
   const { subscription } = req.body;
-  const updatedUser = await updateUser(_id, { subscription });
-  res.json(updatedUser);
+  const user = await updateUser({ _id: id }, { subscription });
+  res.json({
+    email: user.email,
+    subscription: user.subscription,
+  });
 };
 
+const changeAvatar = async (req, res) => {
+  const { _id: id } = req.user;
+
+  if (!req.file) {
+    throw HttpError(400, "Avatar not found");
+  }
+
+  const { path: oldPathAvatar, filename } = req.file;
+  const newPathAvatar = path.join(avatarPath, filename);
+
+  const image = await Jimp.read(oldPathAvatar);
+  await image.cover(250, 250).writeAsync(oldPathAvatar);
+
+  await fs.rename(oldPathAvatar, newPathAvatar);
+
+  const avatarURL = path.join("avatars", filename);
+  const user = await updateUser({ _id: id }, { avatarURL });
+
+  res.json({
+    avatarURL: user.avatarURL,
+  });
+};
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logOut: ctrlWrapper(logOut),
   changeSubscription: ctrlWrapper(changeSubscription),
+  changeAvatar: ctrlWrapper(changeAvatar),
 };
