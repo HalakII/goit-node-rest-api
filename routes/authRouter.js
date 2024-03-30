@@ -4,6 +4,7 @@ import validateBody from "../helpers/validateBody.js";
 import {
   userRegisterSchema,
   userLoginSchema,
+  userEmailSchema,
   subscriptionSchema,
 } from "../schemas/usersSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
@@ -16,6 +17,14 @@ authRouter.post(
   validateBody(userRegisterSchema),
   authControllers.register
 );
+authRouter.get("/verify/:verificationCode", authControllers.verify);
+
+authRouter.post(
+  "/verify",
+  validateBody(userEmailSchema),
+  authControllers.resentVerify
+);
+
 authRouter.post("/login", validateBody(userLoginSchema), authControllers.login);
 
 authRouter.get("/current", authenticate, authControllers.getCurrent);

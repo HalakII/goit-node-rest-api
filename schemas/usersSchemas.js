@@ -17,3 +17,10 @@ export const userLoginSchema = Joi.object({
 export const subscriptionSchema = Joi.object({
   subscription: Joi.string().valid("starter", "pro", "business").required(),
 });
+
+export const userEmailSchema = Joi.object({
+  email: Joi.string()
+    .pattern(emailRegex)
+    .message("Must be a valid email")
+    .required(),
+});
